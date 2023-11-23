@@ -3,9 +3,9 @@ import { estaAutenticado, getToken } from "../auth";
 
 const urlBase = "http://localhost:5234/api";
 
-const checarAutenticacao = (navigate, locationUrl) => {
+export const checarAutenticacao = (navigate) => {
   if (!estaAutenticado()) {
-    navigate("/login?redirect=" + locationUrl);
+    navigate("/login");
   }
 };
 
@@ -56,4 +56,23 @@ export const apiAuthPost = (url, objeto, sucesso, erro) => {
     .catch((error) => {
       erro(error);
     });
+};
+
+export const apiGet = (url, sucesso, erro) => {
+  axios
+    .get(`${urlBase}/${url}`)
+    .then((result) => {
+      sucesso(result.data);
+    })
+    .catch((error) => {
+      erro(error);
+    });
+};
+
+export const apiGetById = (url, id, sucesso, erro) => { 
+  axios.get(`${urlBase}/${url}/${id}`).then(result => {
+      sucesso(result.data);
+  }).catch(error => {
+      erro(error);
+  });
 };

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useQuery } from "../useQuery";
 import { useNavigate } from "react-router-dom";
 import { registrarUsuario } from "../auth";
-import { Eye, EyeOff } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff } from "lucide-react";
 
 const Cadastro = () => {
   const query = useQuery();
@@ -56,9 +56,23 @@ const Cadastro = () => {
     role === "personal" ? setIsPersonalForm(true) : setIsUsuarioForm(true);
   };
 
+  const resetValues = () => {
+    setIsPersonalForm(false);
+    setIsUsuarioForm(false);
+  }
+
   return (
-    <div className="bg-[#cfcfcf] flex flex-col items-center">
-      <div className="w-full p-10 pt-40">
+    <div className="bg-[#cfcfcf] flex flex-col ">
+      {(!!isUsuarioForm || !!isPersonalForm) && (
+        <button
+          onClick={resetValues}
+          className="flex text-gray-600 hover:text-gray-800 p-8 items-start"
+        >
+          <ChevronLeft className="w-6 h-6 mr-2" />
+          Voltar a tela de escolha
+        </button>
+      )}
+      <div className="w-full p-10 pt-40 items-center">
         <h1 className="flex justify-center items-center mb-4 text-4xl font-extrabold">
           Cadastrar{" "}
           {!!isPersonalForm || !!isUsuarioForm
