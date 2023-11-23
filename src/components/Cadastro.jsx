@@ -27,7 +27,7 @@ const Cadastro = () => {
   };
 
   const erro = (e) => {
-    setError(e.response.data);
+    setError(e.response?.data);
   };
 
   const criarUsuario = (e) => {
@@ -62,7 +62,7 @@ const Cadastro = () => {
   }
 
   return (
-    <div className="bg-[#cfcfcf] flex flex-col ">
+    <div className="flex flex-col ">
       {(!!isUsuarioForm || !!isPersonalForm) && (
         <button
           onClick={resetValues}
@@ -82,7 +82,7 @@ const Cadastro = () => {
             : ""}
         </h1>
         {!isPersonalForm && !isUsuarioForm && (
-          <div className="flex justify-center items-center text-center gap-5 mb-[655px]">
+          <div className="flex justify-center items-center text-center gap-5">
             <button
               className="bg-black text-white rounded-full pl-4  p-4"
               onClick={() => changeForm("personal")}
@@ -98,7 +98,7 @@ const Cadastro = () => {
           </div>
         )}
         {(!!isUsuarioForm || !!isPersonalForm) && (
-          <form className="flex flex-col items-center w-full mb-[555px]">
+          <form className="flex flex-col items-center w-full">
             <input
               type="email"
               className="rounded-full pl-4  mb-4 outline-none w-4/5 h-10"
@@ -131,7 +131,7 @@ const Cadastro = () => {
                 )}
               </button>
             </div>
-            {error.length ? <p className="text-red-500 mb-4">{error}</p> : ""}
+            {error?.length ? <p className="text-red-500 mb-4">{error}</p> : ""}
             <button
               type="submit"
               className="bg-[#333] text-white rounded-full pl-4  w-4/5 h-10"

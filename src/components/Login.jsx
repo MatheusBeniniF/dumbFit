@@ -20,7 +20,6 @@ const Login = () => {
   }
 
   const sucesso = (result) => {
-    console.log(result);
     navegar();
   };
 
@@ -44,7 +43,7 @@ const Login = () => {
     setIsPasswordVisible(!isPasswordVisible);
 
   return (
-    <div className="bg-[#cfcfcf] flex flex-col items-center">
+    <div className="flex flex-col items-center">
       <img className="flex items-center w-80 h-1/2" src={logo} alt="logo" />
       <div className="w-full">
         <h1 className="flex justify-center items-center mb-4 text-4xl font-extrabold">
@@ -56,7 +55,7 @@ const Login = () => {
             Cadastre-se
           </Link>
         </div>
-        <form className="flex flex-col items-center w-full mb-[400px]">
+        <form className="flex flex-col items-center w-full">
           <input
             type="email"
             className="rounded-full pl-4  mb-4 outline-none w-4/5 h-10"

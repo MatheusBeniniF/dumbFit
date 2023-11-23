@@ -13,8 +13,8 @@ const FichaCard = ({ ficha, exercicios, user, error }) => {
   };
 
   return (
-    <div className="mb-[540px]">
-      {exerciciosFiltrados.map((exercicio, index) => (
+    <div>
+      {exerciciosFiltrados?.map((exercicio, index) => (
         <div
           key={index}
           className="transition duration-300 ease-in-out transform hover:scale-105 border border-gray-300 rounded-full p-4 my-4 flex flex-col justify-between items-center shadow-md hover:bg-white bg-gray-100"

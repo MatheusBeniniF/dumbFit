@@ -39,7 +39,7 @@ const DetalhesExercicio = () => {
   }, []);
 
   return (
-    <div className="bg-[#cfcfcf] p-8">
+    <div className="p-8">
       <Link
         to="/cliente-dashboard"
         className="flex items-center mb-4 text-gray-600 hover:text-gray-800"

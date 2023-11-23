@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { apiGet, checarAutenticacao } from "../apis";
 import { useNavigate } from "react-router-dom";
+import LogoutButton from "./Logout";
 
 const PersonalDashboard = () => {
   const [data, setData] = useState();
@@ -28,7 +29,12 @@ const PersonalDashboard = () => {
     userRole === "Member" && redirect("/cliente-dashboard");
   }, []);
 
-  return <>Personal dashboard</>;
+  return (
+    <>
+      Personal dashboard
+      <LogoutButton />
+    </>
+  );
 };
 
 export default PersonalDashboard;

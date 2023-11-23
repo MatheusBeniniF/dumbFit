@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { apiGet } from "../apis";
 import FichaCard from "./FichaCard";
 import { useNavigate } from "react-router-dom";
+import LogoutButton from "./Logout";
 
 const ClienteDashboard = () => {
   const [exercicios, setExercicios] = useState();
@@ -22,13 +23,13 @@ const ClienteDashboard = () => {
 
     const userRole = localStorage.getItem("usuario_permissao");
     userRole === "Admin" && redirect("/personal-dashboard");
-  }, [exercicios, fichas, user]);
+  }, [exercicios]);
 
   return (
-    <div className="bg-[#cfcfcf] p-8">
+    <div className="p-8">
       {fichas?.map(
         (ficha, index) =>
-          user === ficha.user && (
+          ficha.user.includes(user) && (
             <div key={index} className="flex flex-col gap-4">
               <h1 className="text-black font-extrabold text-5xl capitalize">
                 {ficha?.titulo}
@@ -49,6 +50,22 @@ const ClienteDashboard = () => {
             </div>
           )
       )}
+      {fichas?.every((ficha) => !ficha.user.includes(user)) && (
+        <div className="p-20">
+          <div className="flex flex-col items-center justify-center h-40 bg-white rounded-lg">
+            <p className="text-gray-500 text-lg mb-4">
+              Usuario sem ficha cadastrada
+            </p>
+            <button
+              // onClick={onRequestNovaFicha}
+              className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-800"
+            >
+              Solicitar Nova Ficha
+            </button>
+          </div>
+        </div>
+      )}
+      <LogoutButton />
     </div>
   );
 };

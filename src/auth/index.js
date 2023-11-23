@@ -39,6 +39,12 @@ export const login = (usuario, senha, sucesso, erro) => {
   );
 };
 
+export const logout = () => {
+  cookies.remove('jwt_auth', { sameSite: 'strict' });
+  localStorage.removeItem('usuario_nome');
+  localStorage.removeItem('usuario_permissao');
+};
+
 export const registrarUsuario = (usuario, senha, admin, sucesso, erro) => {
   if (admin) {
     apiAuthPost(
@@ -54,7 +60,28 @@ export const registrarUsuario = (usuario, senha, admin, sucesso, erro) => {
         localStorage.setItem("usuario_permissao", roles);
 
         cookies.set("jwt_auth", token, {
-          expires: new Date(decoded.exp * 1000), //de segundos para milisegundos
+          expires: new Date(decoded.exp * 1000),
+          sameSite: "strict",
+        });
+
+        sucesso(unique_name, roles);
+      },
+      erro
+    );
+    apiAuthPost(
+      "NewUsuario/Usuario",
+      { Email: usuario, Password: senha, Role: "Admin" },
+      (result) => {
+        const token = result;
+        const decoded = jwtDecode(token);
+
+        const { unique_name, roles } = decoded;
+
+        localStorage.setItem("usuario_nome", unique_name);
+        localStorage.setItem("usuario_permissao", roles);
+
+        cookies.set("jwt_auth", token, {
+          expires: new Date(decoded.exp * 1000),
           sameSite: "strict",
         });
 
@@ -66,6 +93,27 @@ export const registrarUsuario = (usuario, senha, admin, sucesso, erro) => {
     apiPost(
       "usuario/criar",
       { Email: usuario, Password: senha },
+      (result) => {
+        const token = result;
+        const decoded = jwtDecode(token);
+
+        const { unique_name, roles } = decoded;
+
+        localStorage.setItem("usuario_nome", unique_name);
+        localStorage.setItem("usuario_permissao", roles);
+
+        cookies.set("jwt_auth", token, {
+          expires: new Date(decoded.exp * 1000),
+          sameSite: "strict",
+        });
+
+        sucesso(unique_name, roles);
+      },
+      erro
+    );
+    apiPost(
+      "NewUsuario/Usuario",
+      { Email: usuario, Password: senha, Role: "Member" },
       (result) => {
         const token = result;
         const decoded = jwtDecode(token);
