@@ -92,33 +92,37 @@ const PersonalDashboard = () => {
   return (
     <div className="p-10">
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <h1 className="text-black font-extrabold text-5xl">
-            Personal dashboard
+            PERSONAL DASHBOARD
           </h1>
-          <div className="text-black flex items-center gap-4 bg-white rounded-lg">
-            <Button
-              color="primary"
-              onClick={() => {
-                filterAlphabetically();
-              }}
-            >
-              Filtrar
-              <span className="ml-2">
-                <Filter />
-              </span>
-            </Button>
-            <Button
-              color="error"
-              onClick={() => {
-                resetFilter();
-              }}
-            >
-              Remover
-              <span className="ml-2">
-                <FilterX />
-              </span>
-            </Button>
+          <div className="flex items-center gap-4">
+            <div className="filter-button bg-white px-4 py-2 rounded">
+              <Button
+                color="primary"
+                onClick={() => {
+                  filterAlphabetically();
+                }}
+              >
+                Filtrar
+                <span className="ml-2">
+                  <Filter />
+                </span>
+              </Button>
+            </div>
+            <div className="clear-filter-button bg-white px-2 py-2 rounded">
+              <Button
+                color="error"
+                onClick={() => {
+                  resetFilter();
+                }}
+              >
+                Remover
+                <span className="ml-2">
+                  <FilterX />
+                </span>
+              </Button>
+            </div>
           </div>
           {requerimentos?.some((requerimento) =>
             requerimento.personalEmail.includes(user)
@@ -134,7 +138,7 @@ const PersonalDashboard = () => {
           )}
         </div>
         <p className="text-gray-800 font-bold text-lg my-2">
-          Usuarios cadastrados
+          Usuários cadastrados
         </p>
         {filtroAtivo
           ? filteredData.map((member) => (

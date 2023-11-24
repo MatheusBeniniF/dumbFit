@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 
 const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
   const [fichaData, setFichaData] = useState({
@@ -82,11 +82,15 @@ const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Adicionar Nova Ficha</DialogTitle>
-      <DialogContent>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+      <DialogTitle
+        style={{ backgroundColor: "#000000", color: "#fff", padding: "16px" }}
+      >
+        NOVA FICHA
+      </DialogTitle>
+      <DialogContent style={{ backgroundColor: "#f0f0f0", padding: "16px" }}>
         <TextField
-          label="Titulo"
+          label="Título"
           value={fichaData.titulo}
           onChange={(e) => {
             handleInputChange("titulo", e.target.value);
@@ -99,7 +103,7 @@ const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
           fichaData.exercicios.map((exercise, index) => (
             <div key={index}>
               <TextField
-                label={`Exercicio ${index + 1}`}
+                label={`Exercício ${index + 1}`}
                 value={exercise.exercicio}
                 onChange={(e) => {
                   handleExerciseChange(index, "exercicio", e.target.value);
@@ -123,7 +127,7 @@ const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
               <TextField
                 type="number"
                 min="0"
-                label="Numero de series"
+                label="Número de series"
                 value={exercise.qtdSeries}
                 onChange={(e) => {
                   handleExerciseChange(index, "qtdSeries", e.target.value);
@@ -146,18 +150,25 @@ const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
               />
             </div>
           ))}
-        <Button color="error" onClick={handleRemoveExercise}>
-          Remover Exercicio
-        </Button>
+        <Button
+          color="error"
+          onClick={handleRemoveExercise}
+          startIcon={<Minus />}
+        />
         <Button
           onClick={handleAddExercise}
           startIcon={<Plus />}
           disabled={!isFormValid}
-        >
-          Adicionar Exercicio
-        </Button>
+        />
       </DialogContent>
-      <DialogActions>
+      <DialogActions
+        style={{
+          backgroundColor: "#f0f0f0",
+          padding: "16px",
+          borderBottomLeftRadius: 8,
+          borderBottomRightRadius: 8,
+        }}
+      >
         <Button onClick={onClose} color="error">
           Cancelar
         </Button>
