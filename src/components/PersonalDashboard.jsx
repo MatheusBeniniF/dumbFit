@@ -13,7 +13,15 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import { X, PlusIcon, CheckCircle, XCircle, Siren, Filter, FilterX } from "lucide-react";
+import {
+  X,
+  PlusIcon,
+  CheckCircle,
+  XCircle,
+  Siren,
+  Filter,
+  FilterX,
+} from "lucide-react";
 import FichaFormDialog from "./FichaFormDialog";
 import { Snackbar } from "@mui/material";
 
@@ -119,19 +127,19 @@ const PersonalDashboard = () => {
                 <FilterX />
               </span>
             </Button>
+            {requerimentos?.some((requerimento) =>
+              requerimento.personalEmail.includes(user)
+            ) && (
+              <div className="flex items-center gap-4 bg-white rounded-lg">
+                <Button color="error" onClick={() => setOpen(true)}>
+                  Requisições
+                  <span className="ml-2">
+                    <Siren />
+                  </span>
+                </Button>
+              </div>
+            )}
           </div>
-          {requerimentos?.some((requerimento) =>
-            requerimento.personalEmail.includes(user)
-          ) && (
-            <div className="flex items-center gap-4 bg-white rounded-lg">
-              <Button color="error" onClick={() => setOpen(true)}>
-                Requisições
-                <span className="ml-2">
-                  <Siren />
-                </span>
-              </Button>
-            </div>
-          )}
         </div>
         <p className="text-gray-800 font-bold text-lg my-2">
           Usuarios cadastrados
