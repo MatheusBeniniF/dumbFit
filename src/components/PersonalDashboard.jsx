@@ -56,13 +56,13 @@ const PersonalDashboard = () => {
   const onAddFicha = async (obj) => {
     const newObj = { ...obj, user: membro };
     await apiAuthPost("NovaFicha/Ficha", newObj, setSuccess, setError);
-  
-    // if (!erro) {
-    //   setOpenConfirmation(true);
-    //   setMensagem("Ficha criada");
-    //   await apiAuthDelete("RequerirNovaFicha", id, setSuccess, setError);
-    //   setOpen(false);
-    // }
+
+    if (!erro) {
+      setOpenConfirmation(true);
+      setMensagem("Ficha criada");
+      await apiAuthDelete("RequerirNovaFicha", id, setSuccess, setError);
+      setOpen(false);
+    }
   };
 
   useEffect(() => {
