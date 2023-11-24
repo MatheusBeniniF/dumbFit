@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { apiGet } from "../apis";
+import { apiGet, apiPost } from "../apis";
 import FichaCard from "./FichaCard";
 import { useNavigate } from "react-router-dom";
 import LogoutButton from "./Logout";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  ListItemText,
+  Snackbar,
+} from "@mui/material";
+import { CheckCircle, Plus, XCircle } from "lucide-react";
 
 const ClienteDashboard = () => {
   const [exercicios, setExercicios] = useState();
@@ -10,23 +19,43 @@ const ClienteDashboard = () => {
   const [exercicioErro, setExercicioErro] = useState("");
   const [fichaErro, setFichaErro] = useState("");
   const [user, setUser] = useState("");
+  const [data, setData] = useState();
+  const [, setError] = useState("");
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [, setSucesso] = useState();
+  const [erro, setErro] = useState();
 
   const redirect = (route) => {
     navigate(route);
   };
 
+  const onRequestNovaFicha = async () => {
+    await apiGet("NewUsuario", setData, setError);
+    setOpen(true);
+  };
+
   useEffect(() => {
     apiGet("ExercicioRecord/ExercicioRecord", setExercicios, setExercicioErro);
     apiGet("NovaFicha", setFichas, setFichaErro);
+    apiGet("NewUsuario", setData, setError);
+
     setUser(localStorage.getItem("usuario_nome"));
 
     const userRole = localStorage.getItem("usuario_permissao");
     userRole === "Admin" && redirect("/personal-dashboard");
-  }, [exercicios]);
+  }, [exercicios, data]);
+
+  const handleUserSelect = (admin) => {
+    const newObj = { email: user, personalEmail: admin };
+    apiPost("RequerirNovaFicha/RequerirNovaFicha", newObj, setSucesso, setErro);
+    setOpen(false);
+    setOpenConfirmation(true);
+  };
 
   return (
-    <div className="p-8">
+    <div className="p-10">
       {fichas?.map(
         (ficha, index) =>
           ficha.user.includes(user) && (
@@ -57,7 +86,7 @@ const ClienteDashboard = () => {
               Usuario sem ficha cadastrada
             </p>
             <button
-              // onClick={onRequestNovaFicha}
+              onClick={onRequestNovaFicha}
               className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-800"
             >
               Solicitar Nova Ficha
@@ -65,6 +94,45 @@ const ClienteDashboard = () => {
           </div>
         </div>
       )}
+      <Dialog open={open} onClose={() => setOpen(!open)}>
+        <DialogTitle>Escolha um personal para fazer sua ficha</DialogTitle>
+        {data
+          ?.filter((result) => result.role === "Admin")
+          .map((admin) => (
+            <div className="mx-6 my-2 flex items-center justify-between">
+              <ListItemText key={admin.id} primary={admin.email} />
+              <Button
+                color="primary"
+                onClick={() => handleUserSelect(admin.email)}
+              >
+                <Plus />
+              </Button>
+            </div>
+          ))}
+        <DialogActions>
+          <Button onClick={() => setOpen(!open)} color="error">
+            Cancelar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
+        open={openConfirmation}
+        autoHideDuration={3000}
+        onClose={() => setOpenConfirmation(false)}
+      >
+        {!erro ? (
+          <div className="bg-green-500 text-white p-4 rounded flex items-center">
+            <CheckCircle className="w-6 h-6 mr-2" />
+            Sucesso!
+          </div>
+        ) : (
+          <div className="bg-red-500 text-white p-4 rounded flex items-center">
+            <XCircle className="w-6 h-6 mr-2" />
+            Algo deu errado, tente novamente!
+          </div>
+        )}
+      </Snackbar>
       <LogoutButton />
     </div>
   );
