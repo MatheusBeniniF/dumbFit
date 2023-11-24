@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { apiGetById } from "../apis";
 import { Link, useParams } from "react-router-dom";
 import { ChevronLeft, Play } from "lucide-react";
@@ -6,19 +6,17 @@ import { ChevronLeft, Play } from "lucide-react";
 const DetalhesExercicio = () => {
   const [exercicio, setExercicio] = useState();
   const [exercicioErro, setExercicioErro] = useState("");
-  const [tempoRestante, setTempoRestante] = useState(
-    exercicio?.intervalo ?? 60
-  );
+  const [tempoRestante, setTempoRestante] = useState();
   const [timerRunning, setTimerRunning] = useState(false);
 
   const startTimer = () => {
     setTimerRunning(true);
   };
 
-  const resetTimer = () => {
-    setTempoRestante(exercicio.intervalo);
+  const resetTimer = useCallback(() => {
+    setTempoRestante(exercicio?.intervalo);
     setTimerRunning(false);
-  };
+  }, [exercicio?.intervalo]);
 
   useEffect(() => {
     let timer;
@@ -27,6 +25,8 @@ const DetalhesExercicio = () => {
       timer = setInterval(() => {
         setTempoRestante((prevTempo) => prevTempo - 1);
       }, 1000);
+    } else {
+      resetTimer();
     }
 
     return () => clearInterval(timer);
@@ -36,7 +36,8 @@ const DetalhesExercicio = () => {
 
   useEffect(() => {
     apiGetById("ExercicioRecord", id, setExercicio, setExercicioErro);
-  }, []);
+    resetTimer();
+  }, [resetTimer]);
 
   return (
     <div className="p-8">
