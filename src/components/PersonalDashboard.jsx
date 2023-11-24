@@ -13,7 +13,15 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import { X, PlusIcon, CheckCircle, XCircle, Siren, Filter, FilterX } from "lucide-react";
+import {
+  X,
+  PlusIcon,
+  CheckCircle,
+  XCircle,
+  Siren,
+  Filter,
+  FilterX,
+} from "lucide-react";
 import FichaFormDialog from "./FichaFormDialog";
 import { Snackbar } from "@mui/material";
 
@@ -96,8 +104,7 @@ const PersonalDashboard = () => {
           <h1 className="text-black font-extrabold text-5xl">
             PERSONAL DASHBOARD
           </h1>
-          <div className="flex items-center gap-4">
-            <div className="filter-button bg-white px-4 py-2 rounded">
+          <div className="text-black flex items-center gap-4 bg-white rounded-lg">
               <Button
                 color="primary"
                 onClick={() => {
@@ -109,8 +116,6 @@ const PersonalDashboard = () => {
                   <Filter />
                 </span>
               </Button>
-            </div>
-            <div className="clear-filter-button bg-white px-2 py-2 rounded">
               <Button
                 color="error"
                 onClick={() => {
@@ -122,20 +127,19 @@ const PersonalDashboard = () => {
                   <FilterX />
                 </span>
               </Button>
-            </div>
+            {requerimentos?.some((requerimento) =>
+              requerimento.personalEmail.includes(user)
+            ) && (
+              <div className="flex items-center gap-4 bg-white rounded-lg">
+                <Button color="error" onClick={() => setOpen(true)}>
+                  Requisições
+                  <span className="ml-2">
+                    <Siren />
+                  </span>
+                </Button>
+              </div>
+            )}
           </div>
-          {requerimentos?.some((requerimento) =>
-            requerimento.personalEmail.includes(user)
-          ) && (
-            <div className="flex items-center gap-4 bg-white rounded-lg">
-              <Button color="error" onClick={() => setOpen(true)}>
-                Requisições
-                <span className="ml-2">
-                  <Siren />
-                </span>
-              </Button>
-            </div>
-          )}
         </div>
         <p className="text-gray-800 font-bold text-lg my-2">
           Usuários cadastrados
