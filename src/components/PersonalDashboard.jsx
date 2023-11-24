@@ -104,7 +104,8 @@ const PersonalDashboard = () => {
           <h1 className="text-black font-extrabold text-5xl">
             PERSONAL DASHBOARD
           </h1>
-          <div className="text-black flex items-center gap-4 bg-white rounded-lg">
+          <div className="flex items-center gap-4">
+            <div className="filter-button bg-white hover:bg-blue-200 text-white py-2 px-4 rounded">
               <Button
                 color="primary"
                 onClick={() => {
@@ -116,6 +117,8 @@ const PersonalDashboard = () => {
                   <Filter />
                 </span>
               </Button>
+            </div>
+            <div className="clear-filter-button bg-white hover:bg-red-200 text-white py-2 px-4 rounded">
               <Button
                 color="error"
                 onClick={() => {
@@ -127,11 +130,15 @@ const PersonalDashboard = () => {
                   <FilterX />
                 </span>
               </Button>
+            </div>
             {requerimentos?.some((requerimento) =>
               requerimento.personalEmail.includes(user)
             ) && (
-              <div className="flex items-center gap-4 bg-white rounded-lg">
-                <Button color="error" onClick={() => setOpen(true)}>
+              <div className="flex items-center gap-4 bg-white hover:bg-red-200 text-red-800 py-2 px-4 rounded">
+                <Button
+                  color="error"
+                  onClick={() => setOpen(true)}
+                >
                   Requisições
                   <span className="ml-2">
                     <Siren />
