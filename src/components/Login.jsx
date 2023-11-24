@@ -43,7 +43,7 @@ const Login = () => {
     setIsPasswordVisible(!isPasswordVisible);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="bg-[#cfcfcf] flex flex-col items-center">
       <img className="flex items-center w-80 h-1/2" src={logo} alt="logo" />
       <div className="w-full">
         <h1 className="flex justify-center items-center mb-4 text-4xl font-extrabold">

@@ -39,9 +39,23 @@ export const apiAuthGet = (url, sucesso, erro, navigate, locationUrl) => {
     });
 };
 
-export const apiAuthPost = (url, objeto, sucesso, erro) => {
+export const apiAuthDelete = (url, id, sucesso, erro) => { 
   checarAutenticacao();
+  
+  const instance = axios.create({
+      baseURL: `${urlBase}`,
+      timeout: 1000,
+      headers: {'Authorization': 'Bearer ' + getToken()}
+  });
 
+  instance.delete(`/${url}/${id}`).then(() => {
+      sucesso();
+  }).catch(error => {
+      erro(error);
+  });
+};
+
+export const apiAuthPost = (url, objeto, sucesso, erro) => {
   const instance = axios.create({
     baseURL: `${urlBase}`,
     timeout: 1000,
