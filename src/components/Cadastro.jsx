@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "../useQuery";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { registrarUsuario } from "../auth";
 import { ChevronLeft, Eye, EyeOff } from "lucide-react";
 
@@ -59,11 +59,11 @@ const Cadastro = () => {
   const resetValues = () => {
     setIsPersonalForm(false);
     setIsUsuarioForm(false);
-  }
+  };
 
   return (
-    <div className="flex flex-col ">
-      {(!!isUsuarioForm || !!isPersonalForm) && (
+    <div className="bg-[#cfcfcf] flex flex-col p-10">
+      {!!isUsuarioForm || !!isPersonalForm ? (
         <button
           onClick={resetValues}
           className="flex text-gray-600 hover:text-gray-800 p-8 items-start"
@@ -71,6 +71,14 @@ const Cadastro = () => {
           <ChevronLeft className="w-6 h-6 mr-2" />
           Voltar a tela de escolha
         </button>
+      ) : (
+        <Link
+          to="/login"
+          className="flex items-center mb-4 text-gray-600 hover:text-gray-800"
+        >
+          <ChevronLeft className="w-6 h-6 mr-2" />
+          Voltar a tela de Login
+        </Link>
       )}
       <div className="w-full p-10 pt-40 items-center">
         <h1 className="flex justify-center items-center mb-4 text-4xl font-extrabold">
