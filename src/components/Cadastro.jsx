@@ -66,7 +66,7 @@ const Cadastro = () => {
       {!!isUsuarioForm || !!isPersonalForm ? (
         <button
           onClick={resetValues}
-          className="flex text-gray-600 hover:text-gray-800 p-8 items-start"
+          className="flex text-gray-600 hover:text-gray-800 items-start"
         >
           <ChevronLeft className="w-6 h-6 mr-2" />
           Voltar a tela de escolha
@@ -81,12 +81,12 @@ const Cadastro = () => {
         </Link>
       )}
       <div className="w-full p-10 pt-40 items-center">
-        <h1 className="flex justify-center items-center mb-4 text-4xl font-extrabold">
-          Cadastrar{" "}
+        <h1 className="flex justify-center items-center mb-8 text-4xl font-extrabold">
+          Cadastro{" "}
           {!!isPersonalForm || !!isUsuarioForm
             ? isPersonalForm
-              ? "personal"
-              : "usuario"
+              ? "de personal"
+              : "de usuario"
             : ""}
         </h1>
         {!isPersonalForm && !isUsuarioForm && (

@@ -13,7 +13,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import { X, PlusIcon, CheckCircle, XCircle, Siren } from "lucide-react";
+import { X, PlusIcon, CheckCircle, XCircle, Siren, Filter, FilterX } from "lucide-react";
 import FichaFormDialog from "./FichaFormDialog";
 import { Snackbar } from "@mui/material";
 
@@ -30,6 +30,21 @@ const PersonalDashboard = () => {
   const [membro, setMembro] = useState("");
   const [id, setId] = useState();
   const navigate = useNavigate();
+  const [filteredData, setFilteredData] = useState([]);
+  const [filtroAtivo, setFiltroAtivo] = useState(false);
+
+  const filterAlphabetically = () => {
+    const members = [...data]
+      ?.filter((result) => result.role === "Member")
+      .sort((a, b) => a.email.localeCompare(b.email));
+
+    setFilteredData(members);
+    setFiltroAtivo(true);
+  };
+
+  const resetFilter = () => {
+    setFiltroAtivo(false);
+  };
 
   const redirect = (route) => {
     navigate(route);
@@ -81,6 +96,30 @@ const PersonalDashboard = () => {
           <h1 className="text-black font-extrabold text-5xl">
             Personal dashboard
           </h1>
+          <div className="text-black flex items-center gap-4 bg-white rounded-lg">
+            <Button
+              color="primary"
+              onClick={() => {
+                filterAlphabetically();
+              }}
+            >
+              Filtrar
+              <span className="ml-2">
+                <Filter />
+              </span>
+            </Button>
+            <Button
+              color="error"
+              onClick={() => {
+                resetFilter();
+              }}
+            >
+              Remover
+              <span className="ml-2">
+                <FilterX />
+              </span>
+            </Button>
+          </div>
           {requerimentos?.some((requerimento) =>
             requerimento.personalEmail.includes(user)
           ) && (
@@ -97,11 +136,13 @@ const PersonalDashboard = () => {
         <p className="text-gray-800 font-bold text-lg my-2">
           Usuarios cadastrados
         </p>
-        {data
-          ?.filter((result) => result.role === "Member")
-          .map((member) => (
-            <UserCard key={member.id} member={member} />
-          ))}
+        {filtroAtivo
+          ? filteredData.map((member) => (
+              <UserCard key={member.id} member={member} />
+            ))
+          : data
+              ?.filter((result) => result.role === "Member")
+              .map((member) => <UserCard key={member.id} member={member} />)}
         <Dialog
           className="rounded-md"
           open={open}
