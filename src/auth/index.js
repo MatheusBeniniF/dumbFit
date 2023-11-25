@@ -113,7 +113,7 @@ export const registrarUsuario = (usuario, senha, admin, sucesso, erro) => {
     );
     apiPost(
       "NewUsuario/Usuario",
-      { Email: usuario, Password: senha, Role: "Member" },
+      { Email: usuario, Password: senha, Role: "Member", TemFicha: false },
       (result) => {
         const token = result;
         const decoded = jwtDecode(token);
