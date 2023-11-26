@@ -161,7 +161,11 @@ const DetalhesExercicio = () => {
         anchorOrigin={{ vertical: "center", horizontal: "center" }}
         open={openConfirmation}
         autoHideDuration={3000}
-        onClose={() => setOpenConfirmation(false)}
+        onClose={() =>
+          setTimeout(() => {
+            setOpenConfirmation(false);
+          }, 3000)
+        }
       >
         {!error ? (
           <div className="bg-green-500 text-white p-4 rounded flex items-center">

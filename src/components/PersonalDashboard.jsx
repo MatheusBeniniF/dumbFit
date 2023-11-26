@@ -95,7 +95,7 @@ const PersonalDashboard = () => {
     setUser(localStorage.getItem("usuario_nome"));
     const userRole = localStorage.getItem("usuario_permissao");
     userRole === "Member" && redirect("/cliente-dashboard");
-      }, [requerimentos]);
+  }, [requerimentos]);
 
   return (
     <div className="p-10">
@@ -135,10 +135,7 @@ const PersonalDashboard = () => {
               requerimento.personalEmail.includes(user)
             ) && (
               <div className="flex items-center gap-4 bg-white hover:bg-red-200 text-red-800 py-2 px-4 rounded">
-                <Button
-                  color="error"
-                  onClick={() => setOpen(true)}
-                >
+                <Button color="error" onClick={() => setOpen(true)}>
                   Requisições
                   <span className="ml-2">
                     <Siren />
@@ -210,7 +207,11 @@ const PersonalDashboard = () => {
         anchorOrigin={{ vertical: "center", horizontal: "center" }}
         open={openConfirmation}
         autoHideDuration={3000}
-        onClose={() => setOpenConfirmation(false)}
+        onClose={() =>
+          setTimeout(() => {
+            setOpenConfirmation(false);
+          }, 3000)
+        }
       >
         {!erro ? (
           <div className="bg-green-500 text-white p-4 rounded flex items-center">

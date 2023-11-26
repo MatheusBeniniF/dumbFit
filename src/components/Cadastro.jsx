@@ -9,10 +9,13 @@ const Cadastro = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
   const [isUsuarioForm, setIsUsuarioForm] = useState(false);
   const [isPersonalForm, setIsPersonalForm] = useState(false);
   const [error, setError] = useState("");
-  const [isPasswordVisible, setIsPasswordVisible] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
 
   let redirecionarPara = query.get("redirect");
 
@@ -30,9 +33,19 @@ const Cadastro = () => {
     setError(e.response?.data);
   };
 
-  const criarUsuario = (e) => {
-    e.preventDefault();
+  const verificar = () => {
+    setError(""); // Limpar mensagens de erro anteriores
 
+    if (!email || !senha || !confirmarSenha) {
+      setError("Preencha todos os campos.");
+    } else if (senha !== confirmarSenha) {
+      setError("As senhas não coincidem.");
+    } else {
+      criarUsuario();
+    }
+  };
+
+  const criarUsuario = () => {
     if (isPersonalForm) {
       registrarUsuario(email, senha, true, sucesso, erro);
     } else {
@@ -42,6 +55,9 @@ const Cadastro = () => {
 
   const toggleIsPasswordVisible = () =>
     setIsPasswordVisible(!isPasswordVisible);
+
+  const toggleConfirmIsPasswordVisible = () =>
+    setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
 
   const navegar = () => {
     const role = localStorage.getItem("usuario_permissao");
@@ -139,11 +155,33 @@ const Cadastro = () => {
                 )}
               </button>
             </div>
+            <div className="flex w-4/5">
+              <input
+                type={isConfirmPasswordVisible ? "text" : "password"}
+                className="outline-none rounded-full pl-4 pr-12 mb-4 w-full h-10 relative"
+                onChange={(e) => setConfirmarSenha(e.target.value)}
+                id="confirmar-senha"
+                name="confirmar-senha"
+                placeholder="Confirme a sua senha"
+              />
+              <button
+                className="relative transition-200"
+                tabIndex={-1}
+                type="button"
+                onClick={() => toggleConfirmIsPasswordVisible()}
+              >
+                {isConfirmPasswordVisible ? (
+                  <EyeOff className="absolute right-4 top-2.5" />
+                ) : (
+                  <Eye className="absolute right-4 top-2.5" />
+                )}
+              </button>
+            </div>
             {error?.length ? <p className="text-red-500 mb-4">{error}</p> : ""}
             <button
-              type="submit"
+              type="button"
               className="bg-[#333] text-white rounded-full pl-4  w-4/5 h-10"
-              onClick={criarUsuario}
+              onClick={verificar}
             >
               Sign in
             </button>

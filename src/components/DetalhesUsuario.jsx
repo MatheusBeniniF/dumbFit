@@ -3,7 +3,7 @@ import FichaFormDialog from "./FichaFormDialog";
 import { useParams } from "react-router-dom";
 import { apiAuthPost, apiAuthPut, apiGet, apiGetById } from "../apis";
 import FichaCard from "./FichaCard";
-import { CheckCircle, PlusCircle, Trash2, XCircle } from "lucide-react";
+import { CheckCircle, PlusCircle, XCircle } from "lucide-react";
 import { Button, Snackbar } from "@mui/material";
 
 const DetalhesUsuario = () => {

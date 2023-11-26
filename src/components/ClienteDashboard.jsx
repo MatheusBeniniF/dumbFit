@@ -76,7 +76,9 @@ const ClienteDashboard = () => {
 
   return (
     <div className="p-10 flex flex-col gap-2">
-      <h2>Suas fichas</h2>
+      {fichas?.every((ficha) => ficha.user.includes(user)) && (
+        <h2>Suas fichas</h2>
+      )}
       {fichas?.map(
         (ficha, index) =>
           ficha.user.includes(user) && (
@@ -94,9 +96,6 @@ const ClienteDashboard = () => {
                   </p>
                 )}
               </div>
-              {fichaErro && (
-                <p className="text-red-500 mb-4">{fichaErro.response?.data}</p>
-              )}
               <p className="text-gray-800 font-bold text-lg">
                 Lista de exercícios
               </p>
