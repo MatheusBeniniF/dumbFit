@@ -3,7 +3,13 @@ import FichaFormDialog from "./FichaFormDialog";
 import { useParams, Link } from "react-router-dom";
 import { apiAuthPost, apiAuthPut, apiGet, apiGetById } from "../apis";
 import FichaCard from "./FichaCard";
-import { CheckCircle, PlusCircle, XCircle, ChevronLeft, Frown } from "lucide-react";
+import {
+  CheckCircle,
+  PlusCircle,
+  XCircle,
+  ChevronLeft,
+  Frown,
+} from "lucide-react";
 import { Button, Snackbar } from "@mui/material";
 
 const DetalhesUsuario = () => {
@@ -41,7 +47,7 @@ const DetalhesUsuario = () => {
     apiGetById("NewUsuario", id, setUser, setError);
     apiGet("NovaFicha", setFicha, setError);
     apiGet("ExercicioRecord/ExercicioRecord", setExercicios, setError);
-  }, [id, user?.temFicha, ficha]);
+      }, [id, user?.temFicha, ficha]);
 
   return (
     <div className="flex flex-col p-4 m-4">
@@ -68,7 +74,7 @@ const DetalhesUsuario = () => {
             <p className="text-gray-900 font-bold text-lg mb-4">
               Usuario sem ficha
             </p>
-            <Frown style={{ width: '30px', height: '30px' }}/>
+            <Frown style={{ width: "30px", height: "30px" }} />
           </div>
         </div>
       )}

@@ -27,7 +27,7 @@ const DetalhesFicha = () => {
     (exercicio) => exercicio.fichaId === data?.id
   );
 
-  const usuariosFiltrados = users?.find((user) => data.user === user.email);
+  const usuariosFiltrados = users?.find((user) => data?.user === user.email);
 
   const onExcluirExercicio = (exercicioId) => {
     apiAuthDelete("ExercicioRecord", exercicioId, setSuccess, setErro);

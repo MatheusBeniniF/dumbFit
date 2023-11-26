@@ -4,6 +4,7 @@ import {
   apiAuthDelete,
   checarAutenticacao,
   apiAuthPost,
+  apiAuthPut,
 } from "../apis";
 import { useNavigate } from "react-router-dom";
 import LogoutButton from "./Logout";
@@ -23,7 +24,7 @@ import {
   FilterX,
 } from "lucide-react";
 import FichaFormDialog from "./FichaFormDialog";
-import { Snackbar } from "@mui/material";
+import { Menu, MenuItem, Snackbar } from "@mui/material";
 
 const PersonalDashboard = () => {
   const [data, setData] = useState();
@@ -40,12 +41,33 @@ const PersonalDashboard = () => {
   const navigate = useNavigate();
   const [filteredData, setFilteredData] = useState([]);
   const [filtroAtivo, setFiltroAtivo] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const filterAlphabetically = () => {
     const members = [...data]
       ?.filter((result) => result.role === "Member")
       .sort((a, b) => a.email.localeCompare(b.email));
 
+    setFilteredData(members);
+    setFiltroAtivo(true);
+  };
+
+  const filterComFicha = () => {
+    const members = [...data]?.filter((result) => result.temFicha === true);
+    setFilteredData(members);
+    setFiltroAtivo(true);
+  };
+
+  const filterSemFicha = () => {
+    const members = [...data]?.filter((result) => result.temFicha === false);
     setFilteredData(members);
     setFiltroAtivo(true);
   };
@@ -58,6 +80,7 @@ const PersonalDashboard = () => {
     navigate(route);
   };
 
+  const usuario = data?.find((response) => response.email === membro);
   const removerRequisicao = async (id) => {
     await apiAuthDelete("RequerirNovaFicha", id, setSuccess, setError);
     if (!erro) {
@@ -83,6 +106,8 @@ const PersonalDashboard = () => {
     if (!erro) {
       setOpenConfirmation(true);
       setMensagem("Ficha criada");
+      const usuarioObj = { ...usuario, temFicha: true };
+      await apiAuthPut("NewUsuario", usuario.id, usuarioObj, setSuccess, setError);
       await apiAuthDelete("RequerirNovaFicha", id, setSuccess, setError);
       setOpen(false);
     }
@@ -106,17 +131,42 @@ const PersonalDashboard = () => {
           </h1>
           <div className="flex items-center gap-4">
             <div className="filter-button bg-white hover:bg-blue-200 text-white py-2 px-4 rounded">
-              <Button
-                color="primary"
-                onClick={() => {
-                  filterAlphabetically();
-                }}
-              >
-                Filtrar A-Z
+              <Button color="primary" onClick={handleClick}>
+                Filtrar
                 <span className="ml-2">
                   <Filter />
                 </span>
               </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    filterAlphabetically();
+                  }}
+                >
+                  Filtrar A-Z
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    filterComFicha();
+                  }}
+                >
+                  Usuários com Ficha
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    filterSemFicha();
+                  }}
+                >
+                  Usuários sem Ficha
+                </MenuItem>
+              </Menu>
             </div>
             <div className="clear-filter-button bg-white hover:bg-red-200 text-white py-2 px-4 rounded">
               <Button

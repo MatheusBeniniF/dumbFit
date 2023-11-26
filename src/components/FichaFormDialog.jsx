@@ -9,9 +9,9 @@ import { Minus, Plus } from "lucide-react";
 import { Checkbox, FormControlLabel } from "@mui/material";
 
 const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
+  const [sugestao, setSugestao] = useState(false);
   const [fichaData, setFichaData] = useState({
     titulo: "",
-    sugestao: "",
     exercicios: [
       {
         exercicio: "",
@@ -68,26 +68,17 @@ const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
   };
 
   const handleAddFicha = () => {
-    onAddFicha(fichaData);
+    const newData = { ...fichaData, sugestao: sugestao };
+    onAddFicha(newData);
     onClose();
   };
 
   const checkFormValidity = () => {
-    const allFieldsFilled = Object.keys(fichaData).every((key) => {
-      if (key === 'sugestao') {
-        return true;
-      }
-  
-      const value = fichaData[key];
-
-      return value !== "";
-    });
-  
     const exercisesFilled = fichaData.exercicios.every((exercise) =>
       Object.values(exercise).every((value) => value !== "")
     );
-  
-    setIsFormValid(allFieldsFilled && exercisesFilled);
+
+    setIsFormValid(exercisesFilled);
   };
 
   return (
@@ -111,11 +102,8 @@ const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={fichaData.sugestao}
-              onChange={(e) => {
-                handleInputChange("sugestao", e.target.checked);
-                checkFormValidity();
-              }}
+              checked={sugestao}
+              onChange={(e) => setSugestao(e.target.checked)}
             />
           }
           label="Sugestao"
