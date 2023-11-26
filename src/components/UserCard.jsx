@@ -3,10 +3,11 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { CheckCircle, Plus, XCircle } from "lucide-react";
+import { BookUser, CheckCircle, Plus, XCircle } from "lucide-react";
 import FichaFormDialog from "./FichaFormDialog";
 import { apiAuthPost } from "../apis";
 import { Snackbar } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const UserCard = ({ member }) => {
   const [open, setOpen] = useState(false);
@@ -34,35 +35,19 @@ const UserCard = ({ member }) => {
             {member?.email}
           </Typography>
           <div className="flex justify-end p-4">
-            <IconButton
-              aria-label="add-ficha"
-              className="text-green-500 hover:text-green-800"
-              onClick={()=> setOpen(true)}
-            >
-              <Plus />
-            </IconButton>
+            <Link to={`/cliente/${member.id}`}>
+              <IconButton
+                aria-label="add-ficha"
+                className="text-green-500 hover:text-green-800"
+                onClick={() => setOpen(true)}
+              >
+                <BookUser />
+                Info
+              </IconButton>
+            </Link>
           </div>
         </CardContent>
       </Card>
-      <FichaFormDialog open={open} onClose={onClose} onAddFicha={onAddFicha} />
-      <Snackbar
-        anchorOrigin={{ vertical: "center", horizontal: "center" }}
-        open={openConfirmation}
-        autoHideDuration={3000}
-        onClose={() => setOpenConfirmation(false)}
-      >
-        {!erro ? (
-          <div className="bg-green-500 text-white p-4 rounded flex items-center">
-            <CheckCircle className="w-6 h-6 mr-2" />
-            Ficha criada com sucesso!
-          </div>
-        ) : (
-          <div className="bg-red-500 text-white p-4 rounded flex items-center">
-            <XCircle className="w-6 h-6 mr-2" />
-            Algo deu errado, tente novamente!
-          </div>
-        )}
-      </Snackbar>
       {erro && <p className="text-red-500 mb-4">{erro.response?.data}</p>}
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { apiGet, apiPost } from "../apis";
-import FichaCard from "./FichaCard";
+import ExercicioCard from "./ExercicioCard";
 import { useNavigate } from "react-router-dom";
 import LogoutButton from "./Logout";
 import {
@@ -69,7 +69,7 @@ const ClienteDashboard = () => {
               <p className="text-gray-800 font-bold text-lg">
                 Lista de exercicios
               </p>
-              <FichaCard
+              <ExercicioCard
                 key={index}
                 ficha={ficha}
                 exercicios={exercicios}

@@ -16,6 +16,7 @@ const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
         intervalo: "",
         qtdSeries: "",
         repeticoes: "",
+        carga: "",
       },
     ],
   });
@@ -143,6 +144,16 @@ const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
                 value={exercise.repeticoes}
                 onChange={(e) => {
                   handleExerciseChange(index, "repeticoes", e.target.value);
+                  checkFormValidity();
+                }}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Carga"
+                value={exercise.carga}
+                onChange={(e) => {
+                  handleExerciseChange(index, "carga", e.target.value);
                   checkFormValidity();
                 }}
                 fullWidth

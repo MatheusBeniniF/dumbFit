@@ -21,8 +21,6 @@ export const apiPost = (url, objeto, sucesso, erro) => {
 };
 
 export const apiAuthGet = (url, sucesso, erro, navigate, locationUrl) => {
-  checarAutenticacao(navigate, locationUrl);
-
   const instance = axios.create({
     baseURL: `${urlBase}`,
     timeout: 1000,
@@ -39,20 +37,40 @@ export const apiAuthGet = (url, sucesso, erro, navigate, locationUrl) => {
     });
 };
 
-export const apiAuthDelete = (url, id, sucesso, erro) => { 
-  checarAutenticacao();
-  
+export const apiAuthPut = (url, id, objeto, sucesso, erro) => {
   const instance = axios.create({
-      baseURL: `${urlBase}`,
-      timeout: 1000,
-      headers: {'Authorization': 'Bearer ' + getToken()}
+    baseURL: `${urlBase}`,
+    timeout: 1000,
+    headers: { Authorization: "Bearer " + getToken() },
   });
 
-  instance.delete(`/${url}/${id}`).then(() => {
+  instance
+    .put(`/${url}/${id}`, objeto)
+    .then(() => {
       sucesso();
-  }).catch(error => {
+    })
+    .catch((error) => {
       erro(error);
+    });
+};
+
+export const apiAuthDelete = (url, id, sucesso, erro) => {
+  checarAutenticacao();
+
+  const instance = axios.create({
+    baseURL: `${urlBase}`,
+    timeout: 1000,
+    headers: { Authorization: "Bearer " + getToken() },
   });
+
+  instance
+    .delete(`/${url}/${id}`)
+    .then(() => {
+      sucesso();
+    })
+    .catch((error) => {
+      erro(error);
+    });
 };
 
 export const apiAuthPost = (url, objeto, sucesso, erro) => {
@@ -83,10 +101,24 @@ export const apiGet = (url, sucesso, erro) => {
     });
 };
 
-export const apiGetById = (url, id, sucesso, erro) => { 
-  axios.get(`${urlBase}/${url}/${id}`).then(result => {
+export const apiGetById = (url, id, sucesso, erro) => {
+  axios
+    .get(`${urlBase}/${url}/${id}`)
+    .then((result) => {
       sucesso(result.data);
-  }).catch(error => {
+    })
+    .catch((error) => {
       erro(error);
-  });
+    });
+};
+
+export const apiPut = (url, id, objeto, sucesso, erro) => {
+  axios
+    .put(`${urlBase}/${url}/${id}`, objeto)
+    .then(() => {
+      sucesso();
+    })
+    .catch((error) => {
+      erro(error);
+    });
 };

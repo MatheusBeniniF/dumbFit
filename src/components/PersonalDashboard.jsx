@@ -95,7 +95,7 @@ const PersonalDashboard = () => {
     setUser(localStorage.getItem("usuario_nome"));
     const userRole = localStorage.getItem("usuario_permissao");
     userRole === "Member" && redirect("/cliente-dashboard");
-  }, [requerimentos]);
+      }, [requerimentos]);
 
   return (
     <div className="p-10">
