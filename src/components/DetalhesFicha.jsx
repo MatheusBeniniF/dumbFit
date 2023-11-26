@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { apiAuthDelete, apiAuthPut, apiAuthGet, apiGetById } from "../apis";
-import { Pencil, Trash2 } from "lucide-react";
+import { CheckCircle, Pencil, Trash2, XCircle } from "lucide-react";
 import {
   Card,
   CardContent,
   IconButton,
+  Snackbar,
   Typography,
-  Button,
 } from "@mui/material";
 
 const DetalhesFicha = () => {
   const [data, setData] = useState();
+  const [users, setUsers] = useState();
   const [erro, setErro] = useState();
   const [, setSuccess] = useState();
+  const [message, setMessage] = useState("");
+  const [openConfirmation, setOpenConfirmation] = useState(false);
 
   const navigate = useNavigate();
 
@@ -24,27 +27,47 @@ const DetalhesFicha = () => {
     (exercicio) => exercicio.fichaId === data?.id
   );
 
+  const usuariosFiltrados = users?.find((user) => data.user === user.email);
+
   const onExcluirExercicio = (exercicioId) => {
     apiAuthDelete("ExercicioRecord", exercicioId, setSuccess, setErro);
-  };
-
-  const verify = () => {
-    if (exerciciosFiltrados.length === 0) {
-      console.log("entrou");
-      navigate("/personal-dashboard");
-      apiAuthDelete("NovaFicha", id, setData, setErro);
+    if (!erro) {
+      verify();
     }
   };
 
-  const onEditarExercicio = (exercicioId, field, value) => {
-    const newObj = { [field]: value };
-    apiAuthPut("ExercicioRecord", exercicioId, newObj, setSuccess, setErro);
+  const verify = () => {
+    if (exerciciosFiltrados.length === 1) {
+      apiAuthDelete("NovaFicha", id, setData, setErro);
+      const newObj = { ...usuariosFiltrados, temFicha: false };
+      apiAuthPut(
+        "NewUsuario",
+        usuariosFiltrados.id,
+        newObj,
+        setSuccess,
+        setErro
+      );
+      navigate("/personal-dashboard");
+      if (!erro) {
+        setMessage("O exercicio foi editado");
+        setOpenConfirmation(false);
+      }
+    }
+  };
+
+  const onEditarExercicio = (exercicio, field, value) => {
+    const newObj = { ...exercicio, [field]: value };
+    apiAuthPut("ExercicioRecord", exercicio.id, newObj, setSuccess, setErro);
+    if (!erro) {
+      setMessage("O exercicio foi editado");
+      setOpenConfirmation(true);
+    }
   };
 
   useEffect(() => {
     apiGetById("NovaFicha", id, setData, setErro);
     apiAuthGet("ExercicioRecord/ExercicioRecord", setExercicios, setErro);
-
+    apiAuthGet("NewUsuario", setUsers, setErro);
   }, [exercicios, exerciciosFiltrados]);
 
   return (
@@ -54,14 +77,36 @@ const DetalhesFicha = () => {
         <Card key={ex.id} className="mb-4">
           <CardContent className="flex flex-col gap-4">
             <Typography variant="h5" component="div" className="font-semibold">
-              {ex.exercicio}
+              <span
+                id={`${ex.exercicio}`}
+                contentEditable={true}
+                className="p-2 mr-2 cursor-pointer"
+                onBlur={(e) =>
+                  onEditarExercicio(ex, "exercicio", e.target.innerText)
+                }
+              >
+                {ex.exercicio}
+              </span>{" "}
+              <IconButton
+                color="primary"
+                onClick={() => {
+                  const spanElement = document.getElementById(
+                    `${ex.exercicio}`
+                  );
+                  if (spanElement) spanElement.focus();
+                }}
+              >
+                <Pencil />
+              </IconButton>
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Repetições:{" "}
               <span
+                id={`repeticoes-${ex.repeticoes}`}
                 contentEditable={true}
+                className="p-2 mr-2 cursor-pointer"
                 onBlur={(e) =>
-                  onEditarExercicio(ex.id, "repeticoes", e.target.innerText)
+                  onEditarExercicio(ex, "repeticoes", e.target.innerText)
                 }
               >
                 {ex.repeticoes}
@@ -71,7 +116,7 @@ const DetalhesFicha = () => {
                 color="primary"
                 onClick={() => {
                   const spanElement = document.getElementById(
-                    `repeticoes-${ex.id}`
+                    `repeticoes-${ex.repeticoes}`
                   );
                   if (spanElement) spanElement.focus();
                 }}
@@ -84,8 +129,9 @@ const DetalhesFicha = () => {
               <span
                 id={`intervalo-${ex.id}`}
                 contentEditable={true}
+                className="p-2 mr-2 cursor-pointer"
                 onBlur={(e) =>
-                  onEditarExercicio(ex.id, "intervalo", e.target.innerText)
+                  onEditarExercicio(ex, "intervalo", e.target.innerText)
                 }
               >
                 {ex.intervalo}
@@ -108,8 +154,9 @@ const DetalhesFicha = () => {
               <span
                 id={`carga-${ex.id}`}
                 contentEditable={true}
+                className="p-2 mr-2 cursor-pointer"
                 onBlur={(e) =>
-                  onEditarExercicio(ex.id, "carga", e.target.innerText)
+                  onEditarExercicio(ex, "carga", e.target.innerText)
                 }
               >
                 {ex.carga || "Não especificada"}
@@ -124,6 +171,10 @@ const DetalhesFicha = () => {
                 <Pencil />
               </IconButton>
             </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Anotações: {""}
+              {ex.anotacoes}
+            </Typography>
           </CardContent>
           <div className="flex gap-2 p-4">
             <IconButton color="error" onClick={() => onExcluirExercicio(ex.id)}>
@@ -132,6 +183,24 @@ const DetalhesFicha = () => {
           </div>
         </Card>
       ))}
+      <Snackbar
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
+        open={openConfirmation}
+        autoHideDuration={3000}
+        onClose={() => setOpenConfirmation(false)}
+      >
+        {!erro ? (
+          <div className="bg-green-500 text-white p-4 rounded flex items-center">
+            <CheckCircle className="w-6 h-6 mr-2" />
+            {message} com sucesso!
+          </div>
+        ) : (
+          <div className="bg-red-500 text-white p-4 rounded flex items-center">
+            <XCircle className="w-6 h-6 mr-2" />
+            Algo deu errado, tente novamente!
+          </div>
+        )}
+      </Snackbar>
     </div>
   );
 };

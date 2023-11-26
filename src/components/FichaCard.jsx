@@ -1,17 +1,18 @@
 import { Button } from "@mui/material";
-import { Pencil, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiAuthDelete } from "../apis";
+import { apiAuthDelete, apiAuthPut } from "../apis";
 
-const FichaCard = ({ ficha, exercicios, user, error }) => {
+const FichaCard = ({ ficha, exercicios, user, setMessage }) => {
   const [, setSuccess] = useState();
   const [erro, setErro] = useState();
   const navigate = useNavigate();
+
+  const userLogged = localStorage.getItem("usuario_permissao");
   const exerciciosFiltrados = exercicios?.filter(
-    (exercicio) => exercicio.fichaId === ficha.id && ficha.user === user
+    (exercicio) => exercicio.fichaId === ficha?.id
   );
-  console.log(ficha, exercicios, user);
 
   const handleExerciseInfo = (event, info) => {
     event.preventDefault();
@@ -20,6 +21,16 @@ const FichaCard = ({ ficha, exercicios, user, error }) => {
 
   const deletarFicha = (id) => {
     apiAuthDelete("NovaFicha", id, setSuccess, setErro);
+    if (!erro) {
+      setMessage("Ficha excluida");
+    }
+    if (ficha?.length === 1) {
+      const newObj = { ...user, temFicha: false };
+      apiAuthPut("NewUsuario", user.id, newObj, setSuccess, setErro);
+      exerciciosFiltrados?.forEach((ex) => {
+        apiAuthDelete("ExercicioRecord", ex.id, setSuccess, setErro);
+      });
+    }
   };
 
   return (
@@ -31,13 +42,10 @@ const FichaCard = ({ ficha, exercicios, user, error }) => {
         >
           <span className="capitalize mb-2">{f.titulo}</span>
           <div className="flex flex-col items-center justify-center">
-            {user.role === "Member" && (
+            {userLogged === "Admin" && (
               <div className="flex flex-row">
                 <Button color="error" onClick={() => deletarFicha(f.id)}>
                   <Trash2 />
-                </Button>
-                <Button>
-                  <Pencil />
                 </Button>
               </div>
             )}
@@ -50,7 +58,7 @@ const FichaCard = ({ ficha, exercicios, user, error }) => {
           </div>
         </div>
       ))}
-      {error && <p className="text-red-500 mb-4">{error.response?.data}</p>}
+      {erro && <p className="text-red-500 mb-4">{erro.response?.data}</p>}
     </div>
   );
 };

@@ -55,8 +55,6 @@ export const apiAuthPut = (url, id, objeto, sucesso, erro) => {
 };
 
 export const apiAuthDelete = (url, id, sucesso, erro) => {
-  checarAutenticacao();
-
   const instance = axios.create({
     baseURL: `${urlBase}`,
     timeout: 1000,

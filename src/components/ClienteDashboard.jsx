@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { apiGet, apiPost } from "../apis";
+import { apiGet, apiPost, apiPut } from "../apis";
 import ExercicioCard from "./ExercicioCard";
 import { useNavigate } from "react-router-dom";
 import LogoutButton from "./Logout";
@@ -54,20 +54,51 @@ const ClienteDashboard = () => {
     setOpenConfirmation(true);
   };
 
+  const handleFinalizarFicha = (ficha) => {
+    const fichasUsuario = fichas.filter((f) => f.user.includes(user));
+
+    const indexFichaAtual = fichasUsuario.findIndex((f) => f.id === ficha.id);
+    const proximoIndex = (indexFichaAtual + 1) % fichasUsuario.length;
+
+    const fichaAtualizada = { ...ficha, sugestao: false };
+    apiPut("NovaFicha", ficha.id, fichaAtualizada, setSucesso, setErro);
+
+    const proximaFicha = fichasUsuario[proximoIndex];
+    const proximaFichaAtualizada = { ...proximaFicha, sugestao: true };
+    apiPut(
+      "NovaFicha",
+      proximaFicha.id,
+      proximaFichaAtualizada,
+      setSucesso,
+      setErro
+    );
+  };
+
   return (
-    <div className="p-10">
+    <div className="p-10 flex flex-col gap-2">
+      <h2>Suas fichas</h2>
       {fichas?.map(
         (ficha, index) =>
           ficha.user.includes(user) && (
-            <div key={index} className="flex flex-col gap-4">
-              <h1 className="text-black font-extrabold text-5xl capitalize">
-                {ficha?.titulo}
-              </h1>
+            <div
+              key={index}
+              className="flex flex-col gap-4 border-2 p-2 border-black rounded-xl"
+            >
+              <div className="flex justify-between">
+                <h1 className="text-black font-extrabold text-5xl capitalize">
+                  {ficha?.titulo}
+                </h1>
+                {ficha.sugestao === true && (
+                  <p className="text-green-500 font-semibold p-2 bg-white items-center rounded-md flex">
+                    Sugestão
+                  </p>
+                )}
+              </div>
               {fichaErro && (
                 <p className="text-red-500 mb-4">{fichaErro.response?.data}</p>
               )}
               <p className="text-gray-800 font-bold text-lg">
-                Lista de exercicios
+                Lista de exercícios
               </p>
               <ExercicioCard
                 key={index}
@@ -76,6 +107,12 @@ const ClienteDashboard = () => {
                 user={user}
                 error={exercicioErro}
               />
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={() => handleFinalizarFicha(ficha)}
+              >
+                Finalizar Ficha
+              </button>
             </div>
           )
       )}

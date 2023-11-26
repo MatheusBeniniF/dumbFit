@@ -6,10 +6,12 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { Minus, Plus } from "lucide-react";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
   const [fichaData, setFichaData] = useState({
     titulo: "",
+    sugestao: "",
     exercicios: [
       {
         exercicio: "",
@@ -99,6 +101,18 @@ const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
           }}
           fullWidth
           margin="normal"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={fichaData.sugestao}
+              onChange={(e) => {
+                handleInputChange("sugestao", e.target.checked);
+                checkFormValidity();
+              }}
+            />
+          }
+          label="Sugestao"
         />
         {fichaData.exercicios &&
           fichaData.exercicios.map((exercise, index) => (

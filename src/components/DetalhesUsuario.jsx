@@ -11,27 +11,28 @@ const DetalhesUsuario = () => {
   const [ficha, setFicha] = useState();
   const [exercicios, setExercicios] = useState();
   const [error, setError] = useState();
+  const [message, setMessage] = useState("");
   const [mostrarForm, setMostrarForm] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [, setSuccess] = useState();
 
   const onClose = () => {
     setMostrarForm(!mostrarForm);
-    console.log(user);
   };
 
   const onAddFicha = async (obj) => {
     const newObj = { ...obj, user: user.email };
-    console.log(newObj);
     await apiAuthPost("NovaFicha/Ficha", newObj, setSuccess, setError);
     if (!error) {
+      setMessage("Ficha criada");
       const finalObj = { ...user, temFicha: true };
-      console.log(finalObj);
       await apiAuthPut("NewUsuario", id, finalObj, setSuccess, setError);
-      console.log(user);
     }
-    console.log(error);
     setOpenConfirmation(true);
+  };
+
+  const alterarMensagem = (mensagem) => {
+    setMessage(mensagem);
   };
 
   const { id } = useParams();
@@ -40,7 +41,7 @@ const DetalhesUsuario = () => {
     apiGetById("NewUsuario", id, setUser, setError);
     apiGet("NovaFicha", setFicha, setError);
     apiGet("ExercicioRecord/ExercicioRecord", setExercicios, setError);
-  }, [id, user?.temFicha]);
+  }, [id, user?.temFicha, ficha]);
 
   return (
     <div className="flex flex-col p-4">
@@ -52,13 +53,13 @@ const DetalhesUsuario = () => {
           ficha={ficha}
           exercicios={exercicios}
           user={user}
-          error={error}
+          setMessage={alterarMensagem}
         />
       ) : (
         <p>Usuario sem ficha</p>
       )}
       <Button onClick={() => setMostrarForm(true)}>
-        Adicionar nova ficha <PlusCircle />
+        <p className="mr-2">Adicionar nova ficha</p> <PlusCircle />
       </Button>
       <FichaFormDialog
         open={mostrarForm}
@@ -74,7 +75,7 @@ const DetalhesUsuario = () => {
         {!error ? (
           <div className="bg-green-500 text-white p-4 rounded flex items-center">
             <CheckCircle className="w-6 h-6 mr-2" />
-            Ficha criada com sucesso!
+            {message} com sucesso!
           </div>
         ) : (
           <div className="bg-red-500 text-white p-4 rounded flex items-center">
