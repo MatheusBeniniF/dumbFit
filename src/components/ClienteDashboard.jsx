@@ -11,7 +11,7 @@ import {
   ListItemText,
   Snackbar,
 } from "@mui/material";
-import { CheckCircle, Plus, XCircle } from "lucide-react";
+import { CheckCircle, Dumbbell, Plus, XCircle } from "lucide-react";
 
 const ClienteDashboard = () => {
   const [exercicios, setExercicios] = useState();
@@ -76,8 +76,10 @@ const ClienteDashboard = () => {
 
   return (
     <div className="p-10 flex flex-col gap-2">
-      {fichas?.every((ficha) => ficha.user.includes(user)) && (
-        <h2>Suas fichas</h2>
+      {fichas?.some((ficha) => ficha.user.includes(user)) && (
+        <h2 className="text-black font-extrabold text-5xl capitalize mb-4">
+          Suas fichas
+        </h2>
       )}
       {fichas?.map(
         (ficha, index) =>
@@ -87,7 +89,7 @@ const ClienteDashboard = () => {
               className="flex flex-col gap-4 border-2 p-2 border-black rounded-xl"
             >
               <div className="flex justify-between">
-                <h1 className="text-black font-extrabold text-5xl capitalize">
+                <h1 className="text-black font-extrabold text-3xl capitalize">
                   {ficha?.titulo}
                 </h1>
                 {ficha.sugestao === true && (
@@ -118,7 +120,7 @@ const ClienteDashboard = () => {
       {fichas?.every((ficha) => !ficha.user.includes(user)) && (
         <div className="p-20">
           <div className="flex flex-col items-center justify-center h-40 bg-white rounded-lg">
-            <p className="text-gray-500 text-lg mb-4">
+            <p className="text-gray-900 font-bold text-lg mb-4">
               Usuario sem ficha cadastrada
             </p>
             <button
@@ -127,6 +129,9 @@ const ClienteDashboard = () => {
             >
               Solicitar Nova Ficha
             </button>
+          </div>
+          <div className="flex place-content-center mt-8">
+            <Dumbbell style={{ width: '500px', height: '500px', opacity: '0.3' }}/>
           </div>
         </div>
       )}

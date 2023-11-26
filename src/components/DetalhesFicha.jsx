@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { apiAuthDelete, apiAuthPut, apiAuthGet, apiGetById } from "../apis";
-import { CheckCircle, Pencil, Trash2, XCircle } from "lucide-react";
+import { CheckCircle, Pencil, Trash2, XCircle, ChevronLeft } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -72,6 +72,13 @@ const DetalhesFicha = () => {
 
   return (
     <div className="p-8">
+      <Link
+        to="/personal-dashboard"
+        className="flex items-center mb-4 text-gray-600 hover:text-gray-800"
+      >
+        <ChevronLeft className="w-6 h-6 mr-2" />
+        Voltar ao Dashboard
+      </Link>
       <h1 className="text-3xl font-semibold mb-4">Lista de Exercícios</h1>
       {exerciciosFiltrados?.map((ex) => (
         <Card key={ex.id} className="mb-4">
@@ -96,7 +103,7 @@ const DetalhesFicha = () => {
                   if (spanElement) spanElement.focus();
                 }}
               >
-                <Pencil />
+                <Pencil style={{ width: '18px', height: '18px' }}/>
               </IconButton>
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -121,7 +128,7 @@ const DetalhesFicha = () => {
                   if (spanElement) spanElement.focus();
                 }}
               >
-                <Pencil />
+                <Pencil style={{ width: '18px', height: '18px' }}/>
               </IconButton>
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -146,7 +153,7 @@ const DetalhesFicha = () => {
                   if (spanElement) spanElement.focus();
                 }}
               >
-                <Pencil />
+                <Pencil style={{ width: '18px', height: '18px' }}/>
               </IconButton>
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -168,7 +175,7 @@ const DetalhesFicha = () => {
                   if (spanElement) spanElement.focus();
                 }}
               >
-                <Pencil />
+                <Pencil style={{ width: '18px', height: '18px' }}/>
               </IconButton>
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -177,8 +184,8 @@ const DetalhesFicha = () => {
             </Typography>
           </CardContent>
           <div className="flex gap-2 p-4">
-            <IconButton color="error" onClick={() => onExcluirExercicio(ex.id)}>
-              <Trash2 /> Excluir
+            <IconButton color="error" onClick={() => onExcluirExercicio(ex.id)} sx={{ fontSize: '17px' }}>
+              <Trash2 style={{ width: '18px', height: '18px' }}/> Excluir
             </IconButton>
           </div>
         </Card>

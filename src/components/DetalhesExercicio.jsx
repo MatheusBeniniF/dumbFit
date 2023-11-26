@@ -99,14 +99,13 @@ const DetalhesExercicio = () => {
             <p className="text-gray-800 font-semibold mb-2">
               Anotações:{" "}
               <span
-                id={`anotacoes-${exercicio.anotacoes}`}
                 contentEditable={true}
                 className="p-2 mr-2 cursor-pointer "
                 onBlur={(e) =>
                   onEditarExercicio(exercicio, "anotacoes", e.target.value)
                 }
               >
-                <textarea>{exercicio.anotacoes}</textarea>
+                <textarea id={`anotacoes-${exercicio.anotacoes}`}>{exercicio.anotacoes}</textarea>
               </span>{" "}
               <IconButton
                 color="primary"

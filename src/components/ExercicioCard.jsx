@@ -17,7 +17,7 @@ const ExercicioCard = ({ ficha, exercicios, user, error }) => {
       {exerciciosFiltrados?.map((exercicio, index) => (
         <div
           key={index}
-          className="transition duration-300 ease-in-out transform hover:scale-105 border border-gray-300 rounded-full p-4 my-4 mx-4 flex flex-col justify-between items-center shadow-md hover:bg-white bg-gray-100"
+          className="mx-10 transition duration-300 ease-in-out transform hover:scale-105 border border-gray-300 rounded-full p-4 my-4 mx-4 flex flex-col justify-between items-center shadow-md hover:bg-white bg-gray-100"
         >
           <span className="capitalize mb-2 font-bold text-xl">
             {exercicio.exercicio}

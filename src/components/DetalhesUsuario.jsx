@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import FichaFormDialog from "./FichaFormDialog";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { apiAuthPost, apiAuthPut, apiGet, apiGetById } from "../apis";
 import FichaCard from "./FichaCard";
-import { CheckCircle, PlusCircle, XCircle } from "lucide-react";
+import { CheckCircle, PlusCircle, XCircle, ChevronLeft, Frown } from "lucide-react";
 import { Button, Snackbar } from "@mui/material";
 
 const DetalhesUsuario = () => {
@@ -44,8 +44,15 @@ const DetalhesUsuario = () => {
   }, [id, user?.temFicha, ficha]);
 
   return (
-    <div className="flex flex-col p-4">
-      <h2>Detalhes de {user?.email}</h2>
+    <div className="flex flex-col p-4 m-4">
+      <Link
+        to="/personal-dashboard"
+        className="flex items-center mb-4 text-gray-600 hover:text-gray-800"
+      >
+        <ChevronLeft className="w-6 h-6 mr-2" />
+        Voltar ao Dashboard
+      </Link>
+      <h2 className="font-bold text-2xl">Detalhes de {user?.email}</h2>
 
       {user?.temFicha ? (
         <FichaCard
@@ -56,10 +63,18 @@ const DetalhesUsuario = () => {
           setMessage={alterarMensagem}
         />
       ) : (
-        <p>Usuario sem ficha</p>
+        <div className="p-10">
+          <div className="flex flex-col items-center justify-center h-40 bg-white rounded-lg">
+            <p className="text-gray-900 font-bold text-lg mb-4">
+              Usuario sem ficha
+            </p>
+            <Frown style={{ width: '30px', height: '30px' }}/>
+          </div>
+        </div>
       )}
       <Button onClick={() => setMostrarForm(true)}>
-        <p className="mr-2">Adicionar nova ficha</p> <PlusCircle />
+        <p className="mr-2 font-bold text-lg">Adicionar nova ficha</p>{" "}
+        <PlusCircle />
       </Button>
       <FichaFormDialog
         open={mostrarForm}

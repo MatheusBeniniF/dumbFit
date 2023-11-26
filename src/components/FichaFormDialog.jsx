@@ -73,14 +73,20 @@ const FichaFormDialog = ({ open, onClose, onAddFicha }) => {
   };
 
   const checkFormValidity = () => {
-    const allFieldsFilled = Object.values(fichaData).every(
-      (value) => value !== ""
-    );
+    const allFieldsFilled = Object.keys(fichaData).every((key) => {
+      if (key === 'sugestao') {
+        return true;
+      }
+  
+      const value = fichaData[key];
 
+      return value !== "";
+    });
+  
     const exercisesFilled = fichaData.exercicios.every((exercise) =>
       Object.values(exercise).every((value) => value !== "")
     );
-
+  
     setIsFormValid(allFieldsFilled && exercisesFilled);
   };
 

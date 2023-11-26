@@ -112,7 +112,7 @@ const PersonalDashboard = () => {
                   filterAlphabetically();
                 }}
               >
-                Filtrar
+                Filtrar A-Z
                 <span className="ml-2">
                   <Filter />
                 </span>
