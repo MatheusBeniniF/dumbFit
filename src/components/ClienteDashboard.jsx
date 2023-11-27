@@ -26,6 +26,11 @@ const ClienteDashboard = () => {
   const [openConfirmation, setOpenConfirmation] = useState(false);
   const [, setSucesso] = useState();
   const [erro, setErro] = useState();
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [saoIguais, setSaoIguais] = useState(false);
+  const [fichaEscolhida, setFichaEscolhida] = useState();
+
+  const fichaSugestao = fichas?.find((ficha) => ficha.sugestao === true);
 
   const redirect = (route) => {
     navigate(route);
@@ -54,24 +59,76 @@ const ClienteDashboard = () => {
     setOpenConfirmation(true);
   };
 
+  const handleVerificarId = (ficha) => {
+    setFichaEscolhida(ficha);
+    if (ficha?.id === fichaSugestao?.id) {
+      setSaoIguais(true);
+    } else {
+      setSaoIguais(false);
+    }
+    setMostrarModal(true);
+  };
+
   const handleFinalizarFicha = (ficha) => {
     const fichasUsuario = fichas.filter((f) => f.user.includes(user));
 
-    const indexFichaAtual = fichasUsuario.findIndex((f) => f.id === ficha.id);
+    const indexFichaAtual = fichasUsuario.findIndex((f) => f?.id === ficha?.id);
     const proximoIndex = (indexFichaAtual + 1) % fichasUsuario.length;
 
-    const fichaAtualizada = { ...ficha, sugestao: false };
-    apiPut("NovaFicha", ficha.id, fichaAtualizada, setSucesso, setErro);
+    const fichaAtualizada = { ...ficha, sugestao: false, emAndamento: false };
+    apiPut("NovaFicha", ficha?.id, fichaAtualizada, setSucesso, setErro);
 
     const proximaFicha = fichasUsuario[proximoIndex];
-    const proximaFichaAtualizada = { ...proximaFicha, sugestao: true };
+    const proximaFichaAtualizada = {
+      ...proximaFicha,
+      sugestao: true,
+      emAndamento: false,
+    };
     apiPut(
       "NovaFicha",
-      proximaFicha.id,
+      proximaFicha?.id,
       proximaFichaAtualizada,
       setSucesso,
       setErro
     );
+  };
+
+  const handleIniciarFicha = () => {
+    if (!saoIguais) {
+      const fichaClicada = {
+        ...fichaEscolhida,
+        sugestao: true,
+        emAndamento: true,
+      };
+      apiPut(
+        "NovaFicha",
+        fichaEscolhida?.id,
+        fichaClicada,
+        setSucesso,
+        setErro
+      );
+      if (!erro) {
+        const fichaClicada = { ...fichaSugestao, sugestao: false };
+        apiPut(
+          "NovaFicha",
+          fichaSugestao?.id,
+          fichaClicada,
+          setSucesso,
+          setErro
+        );
+      }
+    } else {
+      const fichaClicada = { ...fichaEscolhida, emAndamento: true };
+
+      apiPut(
+        "NovaFicha",
+        fichaEscolhida?.id,
+        fichaClicada,
+        setSucesso,
+        setErro
+      );
+    }
+    setMostrarModal(false);
   };
 
   return (
@@ -108,12 +165,61 @@ const ClienteDashboard = () => {
                 user={user}
                 error={exercicioErro}
               />
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => handleFinalizarFicha(ficha)}
-              >
-                Finalizar Ficha
-              </button>
+              <div className="flex gap-2 w-full">
+                <button
+                  className={` w-full text-white font-bold py-2 px-4 rounded ${
+                    fichas.some((ficha) => ficha.emAndamento)
+                      ? "cursor-not-allowed bg-blue-200"
+                      : "bg-blue-500 hover:bg-blue-700"
+                  }`}
+                  onClick={() => handleVerificarId(ficha)}
+                  disabled={fichas.some((ficha) => ficha.emAndamento)}
+                >
+                  Iniciar Ficha
+                </button>
+                <button
+                  className={` w-full text-white font-bold py-2 px-4 rounded ${
+                    !ficha.emAndamento
+                      ? "cursor-not-allowed bg-red-200"
+                      : "bg-red-500 hover:bg-red-700"
+                  }`}
+                  onClick={() => handleFinalizarFicha(ficha)}
+                  disabled={!ficha.emAndamento}
+                >
+                  Finalizar Ficha
+                </button>
+                <Dialog
+                  open={mostrarModal}
+                  onClose={() => setMostrarModal(false)}
+                  aria-labelledby="modal-title"
+                  aria-describedby="modal-description"
+                >
+                  <DialogTitle>Iniciar Ficha</DialogTitle>
+                  <div className="bg-white p-4 rounded-md">
+                    {!saoIguais && (
+                      <h3 className="text-lg font-semibold mb-4">
+                        Você está prestes a iniciar uma ficha diferente da
+                        sugerida.
+                      </h3>
+                    )}
+                    <div className="flex justify-end mt-4">
+                      <Button
+                        onClick={() => setMostrarModal(false)}
+                        color="error"
+                      >
+                        Cancelar
+                      </Button>
+                      <Button
+                        color="primary"
+                        onClick={handleIniciarFicha}
+                        className="mr-2"
+                      >
+                        Iniciar
+                      </Button>
+                    </div>
+                  </div>
+                </Dialog>
+              </div>
             </div>
           )
       )}
@@ -131,10 +237,13 @@ const ClienteDashboard = () => {
             </button>
           </div>
           <div className="flex place-content-center mt-8">
-            <Dumbbell style={{ width: '500px', height: '500px', opacity: '0.3' }}/>
+            <Dumbbell
+              style={{ width: "500px", height: "500px", opacity: "0.3" }}
+            />
           </div>
         </div>
       )}
+
       <Dialog open={open} onClose={() => setOpen(!open)}>
         <DialogTitle>Escolha um personal para fazer sua ficha</DialogTitle>
         {data
