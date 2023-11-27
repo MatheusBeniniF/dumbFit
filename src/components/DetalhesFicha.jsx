@@ -118,7 +118,6 @@ const DetalhesFicha = () => {
               >
                 {ex.repeticoes}
               </span>{" "}
-              segundos
               <IconButton
                 color="primary"
                 onClick={() => {
