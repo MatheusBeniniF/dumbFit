@@ -34,7 +34,18 @@ const Cadastro = () => {
   };
 
   const verificar = () => {
-    setError(""); // Limpar mensagens de erro anteriores
+    setError("");
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Digite um endereço de email válido.");
+      return;
+    }
+
+    if (senha.length < 8) {
+      setError("A senha deve ter pelo menos 8 caracteres.");
+      return;
+    }
 
     if (!email || !senha || !confirmarSenha) {
       setError("Preencha todos os campos.");

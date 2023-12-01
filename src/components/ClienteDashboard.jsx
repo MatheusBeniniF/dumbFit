@@ -37,7 +37,6 @@ const ClienteDashboard = () => {
   };
 
   const onRequestNovaFicha = async () => {
-    await apiGet("NewUsuario", setData, setError);
     setOpen(true);
   };
 
